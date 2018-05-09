@@ -7,13 +7,16 @@ use Imagine\Image\Box;
 
 $file = $_FILES['file'];
 $post = $_POST;
-$targ_w = (int) $post['crop_img_width'];
-$targ_h = (int) $post['crop_img_height'];
-$croppedX = (int) $post['horizonatal_pos'];
-$croppedY = (int) $post['vertical_pos'];
+$targ_w = (int)$post['crop_img_width'];
+$targ_h = (int)$post['crop_img_height'];
+$croppedX = (int)$post['horizonatal_pos'];
+$croppedY = (int)$post['vertical_pos'];
 
 if (is_array($file) && isset($file['name'])) {
     $uniqueFileName = uniqid('ff') . $file['name'];
+    if (!file_exists(__DIR__ . '/storage')) {
+        mkdir(__DIR__ . '/storage');
+    }
     $destination = './storage/' . $uniqueFileName;
 
     if ($file['error'] == 0) {
@@ -24,11 +27,12 @@ if (is_array($file) && isset($file['name'])) {
         $image = new \Imagine\Gd\Imagine();
         $img = $image->open($destination);
         $img->crop(new Point($croppedX, $croppedY), new Box($targ_w, $targ_h))
-                ->save($croppedDestination);
+            ->save($croppedDestination);
+        unlink($destination);
     }
 } else {
-    
+
 }
-header('Location:index.php');
+header('Location:index.php?path=' . $croppedDestination);
 
 
