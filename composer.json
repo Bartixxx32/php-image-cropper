@@ -1,0 +1,5 @@
+{
+    "require-dev": {
+        "imagine/imagine": "dev-master"
+    }
+}
